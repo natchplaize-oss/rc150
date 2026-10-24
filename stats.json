@@ -1,56 +1,150 @@
 {
   "total": 5842,
-  "department_count": 37,
+  "department_count": 32,
   "departments": [
-    {"name": "Accounting", "count": null},
-    {"name": "Arabic", "count": null},
-    {"name": "B.A", "count": null},
-    {"name": "B.B.S", "count": null},
-    {"name": "B.Sc", "count": null},
-    {"name": "Bangla", "count": null},
-    {"name": "Bengali", "count": null},
-    {"name": "Botany", "count": null},
-    {"name": "Business Studies", "count": null},
-    {"name": "Chemistry", "count": null},
-    {"name": "Economics", "count": null},
-    {"name": "English", "count": null},
-    {"name": "Finance and Banking", "count": null},
-    {"name": "Geography & Environment", "count": null},
-    {"name": "Geography and Environment", "count": null},
-    {"name": "Geography And Environment", "count": null},
-    {"name": "Geology", "count": null},
-    {"name": "History", "count": null},
-    {"name": "Information Technology", "count": null},
-    {"name": "Islamic History & Culture", "count": null},
-    {"name": "Islamic History and culture", "count": null},
-    {"name": "Islamic History And Culture", "count": null},
-    {"name": "Islamic Studies", "count": null},
-    {"name": "Management", "count": null},
-    {"name": "Marketing", "count": null},
-    {"name": "Mathematics", "count": null},
-    {"name": "Philosophy", "count": null},
-    {"name": "Physics", "count": null},
-    {"name": "Political Science", "count": null},
-    {"name": "Psychology", "count": null},
-    {"name": "Sanskrit", "count": null},
-    {"name": "Social Work", "count": null},
-    {"name": "Sociology", "count": null},
-    {"name": "Statistics", "count": null},
-    {"name": "Urdu", "count": null},
-    {"name": "Zoology", "count": null},
-    {"name": "সাধারণ", "count": null}
+    {
+      "name": "Accounting",
+      "count": null
+    },
+    {
+      "name": "Arabic",
+      "count": null
+    },
+    {
+      "name": "B.A.",
+      "count": null
+    },
+    {
+      "name": "BBS",
+      "count": null
+    },
+    {
+      "name": "BSc",
+      "count": null
+    },
+    {
+      "name": "Bangla",
+      "count": null
+    },
+    {
+      "name": "Bengali",
+      "count": null
+    },
+    {
+      "name": "Botany",
+      "count": null
+    },
+    {
+      "name": "Business Studies",
+      "count": null
+    },
+    {
+      "name": "Chemistry",
+      "count": null
+    },
+    {
+      "name": "Economics",
+      "count": null
+    },
+    {
+      "name": "English",
+      "count": null
+    },
+    {
+      "name": "Finance and Banking",
+      "count": null
+    },
+    {
+      "name": "Geography and Environment",
+      "count": null
+    },
+    {
+      "name": "Geology",
+      "count": null
+    },
+    {
+      "name": "History",
+      "count": null
+    },
+    {
+      "name": "Information Technology",
+      "count": null
+    },
+    {
+      "name": "Islamic History and Culture",
+      "count": null
+    },
+    {
+      "name": "Islamic Studies",
+      "count": null
+    },
+    {
+      "name": "Management",
+      "count": null
+    },
+    {
+      "name": "Marketing",
+      "count": null
+    },
+    {
+      "name": "Mathematics",
+      "count": null
+    },
+    {
+      "name": "Philosophy",
+      "count": null
+    },
+    {
+      "name": "Physics",
+      "count": null
+    },
+    {
+      "name": "Political Science",
+      "count": null
+    },
+    {
+      "name": "Psychology",
+      "count": null
+    },
+    {
+      "name": "Sanskrit",
+      "count": null
+    },
+    {
+      "name": "Social Work",
+      "count": null
+    },
+    {
+      "name": "Sociology",
+      "count": null
+    },
+    {
+      "name": "Statistics",
+      "count": null
+    },
+    {
+      "name": "Urdu",
+      "count": null
+    },
+    {
+      "name": "Zoology",
+      "count": null
+    }
   ],
-  "updated_at": "2026-10-25T02:45:00+06:00",
-  "source": "https://www.rc150.org/bn/profiles",
-  "note": "মূল RC150 প্রোফাইল ফিল্টারে ব্যবহারকারীর দেওয়া বিভাগ/গ্রুপের নামগুলো যুক্ত করা হয়েছে। মোট নিবন্ধন সংখ্যা 5842 হলো সর্বশেষ সংরক্ষিত মান; এটি এই মুহূর্তে লাইভ যাচাই করা হয়নি। বিভাগভিত্তিক নিবন্ধনসংখ্যা এখনো পাওয়া/যাচাই করা হয়নি, তাই কোনো অনুমানভিত্তিক সংখ্যা দেখানো হচ্ছে না।",
+  "updated_at": "2026-10-25T02:45:57+06:00",
+  "source": "https://www.rc150.org/bn",
+  "note": "মোট নিবন্ধনসংখ্যা মূল RC150 ওয়েবসাইটের প্রকাশ্য পেজ থেকে স্বয়ংক্রিয়ভাবে নেওয়া হয়েছে। রাজশাহী কলেজের অফিসিয়াল বিভাগ তালিকা যোগ করা হয়েছে। বিভাগভিত্তিক নিবন্ধনসংখ্যা এখনো যাচাই করা হয়নি।",
   "total_changed_at": "2026-10-25T02:12:29+06:00",
   "groups": [
-    "Science (HSC)",
-    "Humanities (HSC)",
-    "Business Studies/Commerce (HSC)",
+    "HSC Science",
+    "HSC Humanities",
+    "HSC Business Studies",
+    "HSC Commerce",
+    "HSC General",
     "Honours",
     "Degree",
+    "Degree Pass",
     "Masters",
-    "সাধারণ"
+    "Other / General"
   ]
 }
