@@ -1,6 +1,12 @@
 name: Update RC150 public statistics
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/update_stats.py'
+      - '.github/workflows/update-stats.yml'
+      - 'stats.json'
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
