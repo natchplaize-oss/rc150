@@ -311,16 +311,14 @@ td:last-child, th:last-child {
 
 <main class="container">
 
-  <div class="notice">
-    <strong>⚠️ ডেমো ডেটা — প্রকৃত নিবন্ধনসংখ্যা নয়</strong>
-    এই সংস্করণে শুধু ড্যাশবোর্ডের ডিজাইন ও কার্যকারিতা দেখানোর
-    জন্য নমুনা সংখ্যা ব্যবহার করা হয়েছে। মূল RC150 ওয়েবসাইটের
-    প্রকৃত তথ্য এখনো সংযুক্ত করা হয়নি।
+  <div class="notice" id="dataNotice">
+    <strong>প্রকৃত তথ্যের অবস্থা</strong>
+    মোট নিবন্ধনের সংখ্যা মূল RC150 ওয়েবসাইট থেকে স্বয়ংক্রিয়ভাবে আনার ব্যবস্থা করা হচ্ছে। বিভাগভিত্তিক সংখ্যা নির্ভরযোগ্যভাবে পাওয়া না যাওয়া পর্যন্ত নমুনা সংখ্যা দেখানো হবে না।
   </div>
 
   <section class="stats">
     <div class="stat">
-      <div class="stat-label">মোট নিবন্ধন (নমুনা)</div>
+      <div class="stat-label">মোট নিবন্ধন</div>
       <div class="stat-value" id="totalCount">০</div>
     </div>
 
@@ -330,15 +328,15 @@ td:last-child, th:last-child {
     </div>
 
     <div class="stat">
-      <div class="stat-label">সর্বোচ্চ নিবন্ধন</div>
-      <div class="stat-value" id="highestCount">০</div>
+      <div class="stat-label">সর্বশেষ সফল আপডেট</div>
+      <div class="stat-value" id="lastUpdated" style="font-size:18px">অপেক্ষমাণ</div>
     </div>
   </section>
 
   <section class="panel">
     <h2>বিভাগভিত্তিক নিবন্ধন</h2>
     <div class="subtitle">
-      প্রতিটি বিভাগের নমুনা নিবন্ধনসংখ্যার তুলনামূলক চিত্র
+      প্রকৃত বিভাগভিত্তিক ডেটা যুক্ত হলে এখানে তুলনামূলক চিত্র দেখা যাবে।
     </div>
 
     <div class="toolbar">
@@ -362,7 +360,7 @@ td:last-child, th:last-child {
   <section class="panel">
     <h2>বিস্তারিত প্রতিবেদন</h2>
     <div class="subtitle" id="tableSubtitle">
-      সব বিভাগের নমুনা নিবন্ধনসংখ্যা
+      প্রকৃত বিভাগভিত্তিক তথ্যের অপেক্ষায়
     </div>
 
     <div class="table-wrap">
@@ -390,149 +388,73 @@ td:last-child, th:last-child {
 </footer>
 
 <script>
-/*
- * DEMO DATA ONLY
- *
- * এখানে প্রকৃত নিবন্ধনসংখ্যা দেওয়া হয়নি।
- * মূল ওয়েবসাইটের তথ্য যাচাই করার পর এই তালিকা
- * প্রকৃত বিভাগভিত্তিক তথ্য দিয়ে প্রতিস্থাপন করতে হবে।
- */
-
-const departments = [
-  { name: "বাংলা", count: 122 },
-  { name: "ইংরেজি", count: 150 },
-  { name: "গণিত", count: 119 },
-  { name: "সমাজবিজ্ঞান", count: 185 },
-  { name: "ইতিহাস", count: 98 },
-  { name: "অর্থনীতি", count: 135 },
-  { name: "রাষ্ট্রবিজ্ঞান", count: 143 },
-  { name: "দর্শন", count: 87 },
-  { name: "পদার্থবিজ্ঞান", count: 110 },
-  { name: "রসায়ন", count: 104 }
-];
-
-const bnNumber = value =>
-  Number(value).toLocaleString("bn-BD");
-
+const bnNumber = value => Number(value).toLocaleString("bn-BD");
 const searchInput = document.getElementById("searchInput");
 const sortSelect = document.getElementById("sortSelect");
 const chart = document.getElementById("chart");
 const tableBody = document.getElementById("tableBody");
-
-function getFilteredDepartments() {
+let departments = [];
+async function loadStats() {
+  try {
+    const response = await fetch("./stats.json?ts=" + Date.now(), { cache: "no-store" });
+    if (!response.ok) throw new Error("stats.json unavailable");
+    const data = await response.json();
+    document.getElementById("totalCount").textContent =
+      data.total != null ? bnNumber(data.total) : "তথ্য নেই";
+    document.getElementById("departmentCount").textContent =
+      data.department_count != null ? bnNumber(data.department_count) : "—";
+    document.getElementById("lastUpdated").textContent =
+      data.updated_at ? new Date(data.updated_at).toLocaleString("bn-BD", {timeZone:"Asia/Dhaka"}) : "অপেক্ষমাণ";
+    document.getElementById("dataNotice").innerHTML =
+      "<strong>তথ্যের অবস্থা</strong>" + (data.note || "প্রকাশ্য RC150 পেজ থেকে সংগৃহীত তথ্য।");
+    document.getElementById("dataStatus").textContent =
+      "তথ্য-উৎস: " + (data.source || "RC150") + " · সর্বশেষ যাচাই: " +
+      (data.updated_at ? new Date(data.updated_at).toLocaleString("bn-BD", {timeZone:"Asia/Dhaka"}) : "এখনো হয়নি");
+    departments = Array.isArray(data.departments) ? data.departments : [];
+    renderDashboard();
+  } catch (error) {
+    document.getElementById("dataNotice").innerHTML =
+      "<strong>তথ্য আপডেট করা যায়নি</strong> আগের নির্ভরযোগ্য তথ্য পাওয়া যাচ্ছে না। কিছুক্ষণ পর আবার চেষ্টা করুন।";
+    document.getElementById("totalCount").textContent = "—";
+    document.getElementById("departmentCount").textContent = "—";
+    document.getElementById("lastUpdated").textContent = "ব্যর্থ";
+    chart.innerHTML = '<div class="empty">বর্তমানে যাচাইকৃত বিভাগভিত্তিক তথ্য নেই।</div>';
+    tableBody.innerHTML = '<tr><td colspan="3" class="empty">প্রকৃত তথ্য পাওয়া যায়নি; নমুনা সংখ্যা দেখানো হচ্ছে না।</td></tr>';
+  }
+}
+function renderDashboard() {
   const query = searchInput.value.trim().toLowerCase();
   const sort = sortSelect.value;
-
-  const result = departments.filter(dept =>
-    dept.name.toLowerCase().includes(query)
-  );
-
-  if (sort === "desc") {
-    result.sort((a, b) => b.count - a.count);
-  } else if (sort === "asc") {
-    result.sort((a, b) => a.count - b.count);
-  } else {
-    result.sort((a, b) =>
-      a.name.localeCompare(b.name, "bn")
-    );
-  }
-
-  return result;
-}
-
-function renderDashboard() {
-  const filtered = getFilteredDepartments();
-
-  const total = departments.reduce(
-    (sum, dept) => sum + dept.count, 0
-  );
-
-  const highest = departments.length
-    ? Math.max(...departments.map(dept => dept.count))
-    : 0;
-
-  document.getElementById("totalCount").textContent =
-    bnNumber(total);
-
-  document.getElementById("departmentCount").textContent =
-    bnNumber(departments.length);
-
-  document.getElementById("highestCount").textContent =
-    bnNumber(highest);
-
+  const filtered = departments.filter(d => d.name.toLowerCase().includes(query));
+  if (sort === "desc") filtered.sort((a,b)=>b.count-a.count);
+  else if (sort === "asc") filtered.sort((a,b)=>a.count-b.count);
+  else filtered.sort((a,b)=>a.name.localeCompare(b.name,"bn"));
+  chart.replaceChildren(); tableBody.replaceChildren();
   document.getElementById("tableSubtitle").textContent =
-    `মোট ${bnNumber(filtered.length)}টি বিভাগের ফলাফল`;
-
-  chart.replaceChildren();
-  tableBody.replaceChildren();
-
+    departments.length ? "প্রকৃত বিভাগভিত্তিক নিবন্ধনসংখ্যা" : "বিভাগভিত্তিক নির্ভরযোগ্য তথ্য এখনো পাওয়া যায়নি";
   if (!filtered.length) {
-    chart.innerHTML =
-      '<div class="empty">কোনো বিভাগ পাওয়া যায়নি।</div>';
-
-    tableBody.innerHTML =
-      '<tr><td colspan="3" class="empty">কোনো তথ্য নেই।</td></tr>';
-
+    chart.innerHTML = '<div class="empty">প্রকৃত বিভাগভিত্তিক তথ্য এখনো পাওয়া যায়নি।</div>';
+    tableBody.innerHTML = '<tr><td colspan="3" class="empty">নমুনা সংখ্যা বাদ দেওয়া হয়েছে; যাচাইকৃত তথ্যের অপেক্ষায়।</td></tr>';
     return;
   }
-
-  const maxCount = Math.max(
-    1,
-    ...filtered.map(dept => dept.count)
-  );
-
-  filtered.forEach((dept, index) => {
-    const row = document.createElement("div");
-    row.className = "chart-row";
-
-    const name = document.createElement("div");
-    name.className = "dept-name";
-    name.textContent = dept.name;
-
-    const track = document.createElement("div");
-    track.className = "bar-track";
-
-    const bar = document.createElement("div");
-    bar.className = "bar";
-    bar.style.width =
-      `${(dept.count / maxCount) * 100}%`;
-
-    bar.title = `${dept.name}: ${bnNumber(dept.count)}`;
-
-    track.appendChild(bar);
-
-    const count = document.createElement("div");
-    count.className = "bar-count";
-    count.textContent = bnNumber(dept.count);
-
-    row.append(name, track, count);
-    chart.appendChild(row);
-
-    const tr = document.createElement("tr");
-
-    const serial = document.createElement("td");
-    serial.textContent = bnNumber(index + 1);
-
-    const departmentName = document.createElement("td");
-    departmentName.textContent = dept.name;
-
-    const departmentCount = document.createElement("td");
-
-    const badge = document.createElement("span");
-    badge.className = "badge";
-    badge.textContent = bnNumber(dept.count);
-
-    departmentCount.appendChild(badge);
-
-    tr.append(serial, departmentName, departmentCount);
+  const max = Math.max(1, ...filtered.map(d=>d.count));
+  filtered.forEach((d,i)=>{
+    const row=document.createElement("div"); row.className="chart-row";
+    const name=document.createElement("div"); name.className="dept-name"; name.textContent=d.name;
+    const track=document.createElement("div"); track.className="bar-track";
+    const bar=document.createElement("div"); bar.className="bar"; bar.style.width=(d.count/max*100)+"%"; track.appendChild(bar);
+    const count=document.createElement("div"); count.className="bar-count"; count.textContent=bnNumber(d.count);
+    row.append(name,track,count); chart.appendChild(row);
+    const tr=document.createElement("tr");
+    [bnNumber(i+1),d.name,bnNumber(d.count)].forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td);});
     tableBody.appendChild(tr);
   });
 }
+searchInput.addEventListener("input",renderDashboard);
+sortSelect.addEventListener("change",renderDashboard);
+loadStats();
+setInterval(loadStats, 5*60*1000);
 
-searchInput.addEventListener("input", renderDashboard);
-sortSelect.addEventListener("change", renderDashboard);
-
-renderDashboard();
 </script>
 
 </body>
