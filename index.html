@@ -358,6 +358,12 @@ td:last-child, th:last-child {
   </section>
 
   <section class="panel">
+    <h2>প্রোফাইল ফিল্টারের শ্রেণি ও গ্রুপ</h2>
+    <div class="subtitle">প্রাপ্ত নামগুলো তালিকাভুক্ত; এগুলোর নিবন্ধনসংখ্যা এখনো যাচাই করা হয়নি।</div>
+    <div id="groupList" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+  </section>
+
+  <section class="panel">
     <h2>বিস্তারিত প্রতিবেদন</h2>
     <div class="subtitle" id="tableSubtitle">
       প্রকৃত বিভাগভিত্তিক তথ্যের অপেক্ষায়
@@ -413,6 +419,16 @@ async function loadStats() {
         (data.updated_at ? new Date(data.updated_at).toLocaleString("bn-BD", {timeZone:"Asia/Dhaka"}) : "এখনো হয়নি");
     }
     departments = Array.isArray(data.departments) ? data.departments : [];
+    const groupList = document.getElementById("groupList");
+    if (groupList) {
+      groupList.replaceChildren();
+      (Array.isArray(data.groups) ? data.groups : []).forEach(group => {
+        const tag = document.createElement("span");
+        tag.className = "badge";
+        tag.textContent = group;
+        groupList.appendChild(tag);
+      });
+    }
     renderDashboard();
   } catch (error) {
     document.getElementById("dataNotice").innerHTML =
