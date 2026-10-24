@@ -19,6 +19,33 @@ HEADERS = {
     "Accept-Language": "bn,en;q=0.9",
 }
 
+DEPARTMENTS = [
+    "বাংলা",
+    "ইংরেজি",
+    "আরবি ও ইসলামিক স্টাডিজ",
+    "সংস্কৃত",
+    "উর্দু",
+    "ইতিহাস",
+    "ইসলামের ইতিহাস ও সংস্কৃতি",
+    "দর্শন",
+    "রাষ্ট্রবিজ্ঞান",
+    "সমাজবিজ্ঞান",
+    "সমাজকর্ম",
+    "অর্থনীতি",
+    "পদার্থবিজ্ঞান",
+    "রসায়ন",
+    "গণিত",
+    "উদ্ভিদবিজ্ঞান",
+    "প্রাণিবিদ্যা",
+    "মনোবিজ্ঞান",
+    "পরিসংখ্যান",
+    "ভূগোল ও পরিবেশ",
+    "মার্কেটিং",
+    "ফিন্যান্স ও ব্যাংকিং",
+    "হিসাববিজ্ঞান",
+    "ব্যবস্থাপনা"
+]
+
 BN_DIGITS = str.maketrans("০১২৩৪৫৬৭৮৯", "0123456789")
 
 
@@ -70,14 +97,14 @@ def main():
                 "total": total,
                 # Department aggregates are intentionally left empty until they can be
                 # derived and verified from the official public profiles data.
-                "department_count": None,
-                "departments": [],
+                "department_count": len(DEPARTMENTS),
+                "departments": [{"name": name, "count": None} for name in DEPARTMENTS],
                 "updated_at": now,
                 "source": url,
                 "total_changed_at": now if old_total != total else data.get("total_changed_at", now),
                 "note": (
                     "মোট নিবন্ধনসংখ্যা মূল RC150 ওয়েবসাইটের প্রকাশ্য পেজ থেকে স্বয়ংক্রিয়ভাবে নেওয়া হয়েছে। "
-                    "বিভাগভিত্তিক মোট সংখ্যা নির্ভরযোগ্যভাবে যাচাই করা যায়নি, তাই সেগুলো দেখানো হচ্ছে না।"
+                    "রাজশাহী কলেজের অফিসিয়াল বিভাগ তালিকা যোগ করা হয়েছে। বিভাগভিত্তিক নিবন্ধনসংখ্যা এখনো যাচাই করা হয়নি।"
                 ),
             })
             path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
