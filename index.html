@@ -407,9 +407,11 @@ async function loadStats() {
       data.updated_at ? new Date(data.updated_at).toLocaleString("bn-BD", {timeZone:"Asia/Dhaka"}) : "অপেক্ষমাণ";
     document.getElementById("dataNotice").innerHTML =
       "<strong>তথ্যের অবস্থা</strong>" + (data.note || "প্রকাশ্য RC150 পেজ থেকে সংগৃহীত তথ্য।");
-    document.getElementById("dataStatus").textContent =
-      "তথ্য-উৎস: " + (data.source || "RC150") + " · সর্বশেষ যাচাই: " +
-      (data.updated_at ? new Date(data.updated_at).toLocaleString("bn-BD", {timeZone:"Asia/Dhaka"}) : "এখনো হয়নি");
+    const dataStatus = document.getElementById("dataStatus");
+    if (dataStatus) {
+      dataStatus.textContent = "তথ্য-উৎস: " + (data.source || "RC150") + " · সর্বশেষ যাচাই: " +
+        (data.updated_at ? new Date(data.updated_at).toLocaleString("bn-BD", {timeZone:"Asia/Dhaka"}) : "এখনো হয়নি");
+    }
     departments = Array.isArray(data.departments) ? data.departments : [];
     renderDashboard();
   } catch (error) {
