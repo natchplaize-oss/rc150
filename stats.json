@@ -1,106 +1,150 @@
 {
   "total": 5842,
-  "department_count": 24,
+  "department_count": 32,
   "departments": [
     {
-      "name": "বাংলা",
+      "name": "Accounting",
       "count": null
     },
     {
-      "name": "ইংরেজি",
+      "name": "Arabic",
       "count": null
     },
     {
-      "name": "আরবি ও ইসলামিক স্টাডিজ",
+      "name": "B.A.",
       "count": null
     },
     {
-      "name": "সংস্কৃত",
+      "name": "BBS",
       "count": null
     },
     {
-      "name": "উর্দু",
+      "name": "BSc",
       "count": null
     },
     {
-      "name": "ইতিহাস",
+      "name": "Bangla",
       "count": null
     },
     {
-      "name": "ইসলামের ইতিহাস ও সংস্কৃতি",
+      "name": "Bengali",
       "count": null
     },
     {
-      "name": "দর্শন",
+      "name": "Botany",
       "count": null
     },
     {
-      "name": "রাষ্ট্রবিজ্ঞান",
+      "name": "Business Studies",
       "count": null
     },
     {
-      "name": "সমাজবিজ্ঞান",
+      "name": "Chemistry",
       "count": null
     },
     {
-      "name": "সমাজকর্ম",
+      "name": "Economics",
       "count": null
     },
     {
-      "name": "অর্থনীতি",
+      "name": "English",
       "count": null
     },
     {
-      "name": "পদার্থবিজ্ঞান",
+      "name": "Finance and Banking",
       "count": null
     },
     {
-      "name": "রসায়ন",
+      "name": "Geography and Environment",
       "count": null
     },
     {
-      "name": "গণিত",
+      "name": "Geology",
       "count": null
     },
     {
-      "name": "উদ্ভিদবিজ্ঞান",
+      "name": "History",
       "count": null
     },
     {
-      "name": "প্রাণিবিদ্যা",
+      "name": "Information Technology",
       "count": null
     },
     {
-      "name": "মনোবিজ্ঞান",
+      "name": "Islamic History and Culture",
       "count": null
     },
     {
-      "name": "পরিসংখ্যান",
+      "name": "Islamic Studies",
       "count": null
     },
     {
-      "name": "ভূগোল ও পরিবেশ",
+      "name": "Management",
       "count": null
     },
     {
-      "name": "মার্কেটিং",
+      "name": "Marketing",
       "count": null
     },
     {
-      "name": "ফিন্যান্স ও ব্যাংকিং",
+      "name": "Mathematics",
       "count": null
     },
     {
-      "name": "হিসাববিজ্ঞান",
+      "name": "Philosophy",
       "count": null
     },
     {
-      "name": "ব্যবস্থাপনা",
+      "name": "Physics",
+      "count": null
+    },
+    {
+      "name": "Political Science",
+      "count": null
+    },
+    {
+      "name": "Psychology",
+      "count": null
+    },
+    {
+      "name": "Sanskrit",
+      "count": null
+    },
+    {
+      "name": "Social Work",
+      "count": null
+    },
+    {
+      "name": "Sociology",
+      "count": null
+    },
+    {
+      "name": "Statistics",
+      "count": null
+    },
+    {
+      "name": "Urdu",
+      "count": null
+    },
+    {
+      "name": "Zoology",
       "count": null
     }
   ],
   "updated_at": "2026-10-25T02:25:27+06:00",
   "source": "https://www.rc150.org/bn",
-  "note": "মোট নিবন্ধনসংখ্যা মূল RC150 ওয়েবসাইটের প্রকাশ্য পেজ থেকে স্বয়ংক্রিয়ভাবে নেওয়া হয়েছে। রাজশাহী কলেজের অফিসিয়াল বিভাগ তালিকা যোগ করা হয়েছে। বিভাগভিত্তিক নিবন্ধনসংখ্যা এখনো যাচাই করা হয়নি।",
-  "total_changed_at": "2026-10-25T02:12:29+06:00"
+  "note": "তোমার দেওয়া RC150 প্রোফাইল ফিল্টারের বিভাগ/গ্রুপের নামগুলো যোগ করা হয়েছে; এগুলো মূল সাইটের সম্পূর্ণ তালিকার স্বাধীন যাচাই নয়। বিভাগভিত্তিক নিবন্ধনসংখ্যা এখনো যাচাই করা হয়নি।",
+  "total_changed_at": "2026-10-25T02:12:29+06:00",
+  "groups": [
+    "HSC Science",
+    "HSC Humanities",
+    "HSC Business Studies",
+    "HSC Commerce",
+    "HSC General",
+    "Honours",
+    "Degree",
+    "Degree Pass",
+    "Masters",
+    "Other / General"
+  ]
 }
