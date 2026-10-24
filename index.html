@@ -305,7 +305,7 @@ td:last-child, th:last-child {
   <h1>রাজশাহী কলেজ</h1>
   <p>১৫০ বছর পূর্তি উদ্‌যাপন</p>
   <p style="margin-top:8px">
-    বিভাগভিত্তিক নিবন্ধন পরিসংখ্যান
+    বিভাগভিত্তিক নিবন্ধন ডিরেক্টরি
   </p>
 </header>
 
@@ -336,7 +336,7 @@ td:last-child, th:last-child {
   <section class="panel">
     <h2>বিভাগভিত্তিক নিবন্ধন</h2>
     <div class="subtitle">
-      প্রকৃত বিভাগভিত্তিক ডেটা যুক্ত হলে এখানে তুলনামূলক চিত্র দেখা যাবে।
+      মূল রাজশাহী কলেজের প্রকাশিত ২৪টি বিভাগের তালিকা। নিবন্ধনসংখ্যা পাওয়া গেলে পরে যুক্ত হবে।
     </div>
 
     <div class="toolbar">
@@ -421,34 +421,34 @@ async function loadStats() {
     document.getElementById("departmentCount").textContent = "—";
     document.getElementById("lastUpdated").textContent = "ব্যর্থ";
     chart.innerHTML = '<div class="empty">বর্তমানে যাচাইকৃত বিভাগভিত্তিক তথ্য নেই।</div>';
-    tableBody.innerHTML = '<tr><td colspan="3" class="empty">প্রকৃত তথ্য পাওয়া যায়নি; নমুনা সংখ্যা দেখানো হচ্ছে না।</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="3" class="empty">নিবন্ধনসংখ্যা এখনো যাচাইকৃত নয়।</td></tr>';
   }
 }
 function renderDashboard() {
   const query = searchInput.value.trim().toLowerCase();
   const sort = sortSelect.value;
   const filtered = departments.filter(d => d.name.toLowerCase().includes(query));
-  if (sort === "desc") filtered.sort((a,b)=>b.count-a.count);
-  else if (sort === "asc") filtered.sort((a,b)=>a.count-b.count);
+  if (sort === "desc") filtered.sort((a,b)=>(b.count ?? -1)-(a.count ?? -1));
+  else if (sort === "asc") filtered.sort((a,b)=>(a.count ?? Number.MAX_SAFE_INTEGER)-(b.count ?? Number.MAX_SAFE_INTEGER));
   else filtered.sort((a,b)=>a.name.localeCompare(b.name,"bn"));
   chart.replaceChildren(); tableBody.replaceChildren();
   document.getElementById("tableSubtitle").textContent =
-    departments.length ? "প্রকৃত বিভাগভিত্তিক নিবন্ধনসংখ্যা" : "বিভাগভিত্তিক নির্ভরযোগ্য তথ্য এখনো পাওয়া যায়নি";
+    departments.length ? "রাজশাহী কলেজের বিভাগ তালিকা — নিবন্ধনসংখ্যা এখনো যাচাইকৃত নয়" : "বিভাগ তালিকা পাওয়া যায়নি";
   if (!filtered.length) {
-    chart.innerHTML = '<div class="empty">প্রকৃত বিভাগভিত্তিক তথ্য এখনো পাওয়া যায়নি।</div>';
+    chart.innerHTML = '<div class="empty">বিভাগের নাম তালিকাভুক্ত করা হয়েছে; নিবন্ধনসংখ্যা এখনো যোগ করা হয়নি।</div>';
     tableBody.innerHTML = '<tr><td colspan="3" class="empty">নমুনা সংখ্যা বাদ দেওয়া হয়েছে; যাচাইকৃত তথ্যের অপেক্ষায়।</td></tr>';
     return;
   }
-  const max = Math.max(1, ...filtered.map(d=>d.count));
+  const max = Math.max(1, ...filtered.map(d=>d.count ?? 0));
   filtered.forEach((d,i)=>{
     const row=document.createElement("div"); row.className="chart-row";
     const name=document.createElement("div"); name.className="dept-name"; name.textContent=d.name;
     const track=document.createElement("div"); track.className="bar-track";
-    const bar=document.createElement("div"); bar.className="bar"; bar.style.width=(d.count/max*100)+"%"; track.appendChild(bar);
-    const count=document.createElement("div"); count.className="bar-count"; count.textContent=bnNumber(d.count);
+    const bar=document.createElement("div"); bar.className="bar"; bar.style.width=((d.count ?? 0)/max*100)+"%"; track.appendChild(bar);
+    const count=document.createElement("div"); count.className="bar-count"; count.textContent=d.count == null ? "—" : bnNumber(d.count);
     row.append(name,track,count); chart.appendChild(row);
     const tr=document.createElement("tr");
-    [bnNumber(i+1),d.name,bnNumber(d.count)].forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td);});
+    [bnNumber(i+1),d.name,d.count == null ? "তথ্য নেই" : bnNumber(d.count)].forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td);});
     tableBody.appendChild(tr);
   });
 }
