@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#123b2b">
+
+<title>RC150 | বিভাগভিত্তিক নিবন্ধন প্রতিবেদন</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+
+:root {
+  --green: #123b2b;
+  --green2: #1d6345;
+  --gold: #d9b66f;
+  --bg: #f4f6f2;
+  --text: #1e2b24;
+  --muted: #6b776f;
+  --white: #ffffff;
+  --border: #e3e9e2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Hind Siliguri', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.header {
+  background: linear-gradient(135deg, #0b2b20, #1d6345);
+  color: white;
+  padding: 32px 18px 42px;
+  text-align: center;
+  border-bottom: 4px solid var(--gold);
+}
+
+.logo {
+  width: 62px;
+  height: 62px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.header h1 {
+  font-size: clamp(23px, 5vw, 35px);
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+.header p {
+  margin: 0;
+  color: #e0eadd;
+  font-size: 15px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: -20px auto 0;
+  padding: 0 16px 35px;
+  position: relative;
+}
+
+.notice {
+  background: #fff5dc;
+  border: 1px solid #efd89e;
+  color: #72551a;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.notice strong {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.stat {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(15, 48, 31, .04);
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  color: var(--green);
+  font-size: clamp(23px, 4vw, 32px);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(15, 48, 31, .035);
+}
+
+.panel h2 {
+  font-size: 21px;
+  color: var(--green);
+  margin: 0 0 5px;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+input, select {
+  font: inherit;
+  padding: 11px 13px;
+  border: 1px solid #d9e1d8;
+  border-radius: 9px;
+  background: white;
+  color: var(--text);
+  outline: none;
+}
+
+input {
+  flex: 1;
+  min-width: 180px;
+}
+
+input:focus, select:focus {
+  border-color: var(--green2);
+}
+
+.chart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.chart-row {
+  display: grid;
+  grid-template-columns: minmax(105px, 165px) 1fr 48px;
+  gap: 12px;
+  align-items: center;
+}
+
+.dept-name {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.bar-track {
+  height: 13px;
+  border-radius: 20px;
+  background: #edf1ec;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #1d6345, #4b9970);
+  transition: width .35s ease;
+}
+
+.bar-count {
+  text-align: right;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+th, td {
+  padding: 13px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-size: 14px;
+}
+
+th {
+  background: #f3f7f2;
+  color: var(--green);
+  font-weight: 600;
+}
+
+tbody tr:hover {
+  background: #f8faf7;
+}
+
+td:last-child, th:last-child {
+  text-align: right;
+}
+
+.badge {
+  display: inline-block;
+  background: #e5f3e8;
+  color: #24613b;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.empty {
+  text-align: center;
+  padding: 28px;
+  color: var(--muted);
+}
+
+.footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 12px 15px 25px;
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 27px 15px 38px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .stat {
+    padding: 15px 17px;
+  }
+
+  .stat-value {
+    font-size: 27px;
+  }
+
+  .panel {
+    padding: 16px 12px;
+  }
+
+  .chart-row {
+    grid-template-columns: 100px minmax(30px, 1fr) 38px;
+    gap: 8px;
+  }
+
+  .dept-name, .bar-count {
+    font-size: 12px;
+  }
+
+  .toolbar {
+    flex-direction: column;
+  }
+
+  input, select {
+    width: 100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">RC150</div>
+  <h1>রাজশাহী কলেজ</h1>
+  <p>১৫০ বছর পূর্তি উদ্‌যাপন</p>
+  <p style="margin-top:8px">
+    বিভাগভিত্তিক নিবন্ধন পরিসংখ্যান
+  </p>
+</header>
+
+<main class="container">
+
+  <div class="notice">
+    <strong>⚠️ ডেমো ডেটা — প্রকৃত নিবন্ধনসংখ্যা নয়</strong>
+    এই সংস্করণে শুধু ড্যাশবোর্ডের ডিজাইন ও কার্যকারিতা দেখানোর
+    জন্য নমুনা সংখ্যা ব্যবহার করা হয়েছে। মূল RC150 ওয়েবসাইটের
+    প্রকৃত তথ্য এখনো সংযুক্ত করা হয়নি।
+  </div>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-label">মোট নিবন্ধন (নমুনা)</div>
+      <div class="stat-value" id="totalCount">০</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">মোট বিভাগ</div>
+      <div class="stat-value" id="departmentCount">০</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">সর্বোচ্চ নিবন্ধন</div>
+      <div class="stat-value" id="highestCount">০</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>বিভাগভিত্তিক নিবন্ধন</h2>
+    <div class="subtitle">
+      প্রতিটি বিভাগের নমুনা নিবন্ধনসংখ্যার তুলনামূলক চিত্র
+    </div>
+
+    <div class="toolbar">
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="বিভাগের নাম খুঁজুন..."
+        aria-label="বিভাগের নাম খুঁজুন"
+      >
+
+      <select id="sortSelect" aria-label="তালিকা সাজান">
+        <option value="desc">নিবন্ধন: বেশি থেকে কম</option>
+        <option value="asc">নিবন্ধন: কম থেকে বেশি</option>
+        <option value="name">বিভাগের নাম অনুযায়ী</option>
+      </select>
+    </div>
+
+    <div id="chart" class="chart-list"></div>
+  </section>
+
+  <section class="panel">
+    <h2>বিস্তারিত প্রতিবেদন</h2>
+    <div class="subtitle" id="tableSubtitle">
+      সব বিভাগের নমুনা নিবন্ধনসংখ্যা
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ক্রম</th>
+            <th>বিভাগের নাম</th>
+            <th>নিবন্ধনসংখ্যা</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div>Rajshahi College 150th Anniversary</div>
+  <div>Registration Statistics Dashboard</div>
+  <div style="margin-top:5px">
+    প্রদর্শিত তথ্য নমুনা; এটি সরকারি বা যাচাইকৃত প্রতিবেদন নয়।
+  </div>
+</footer>
+
+<script>
+/*
+ * DEMO DATA ONLY
+ *
+ * এখানে প্রকৃত নিবন্ধনসংখ্যা দেওয়া হয়নি।
+ * মূল ওয়েবসাইটের তথ্য যাচাই করার পর এই তালিকা
+ * প্রকৃত বিভাগভিত্তিক তথ্য দিয়ে প্রতিস্থাপন করতে হবে।
+ */
+
+const departments = [
+  { name: "বাংলা", count: 122 },
+  { name: "ইংরেজি", count: 150 },
+  { name: "গণিত", count: 119 },
+  { name: "সমাজবিজ্ঞান", count: 185 },
+  { name: "ইতিহাস", count: 98 },
+  { name: "অর্থনীতি", count: 135 },
+  { name: "রাষ্ট্রবিজ্ঞান", count: 143 },
+  { name: "দর্শন", count: 87 },
+  { name: "পদার্থবিজ্ঞান", count: 110 },
+  { name: "রসায়ন", count: 104 }
+];
+
+const bnNumber = value =>
+  Number(value).toLocaleString("bn-BD");
+
+const searchInput = document.getElementById("searchInput");
+const sortSelect = document.getElementById("sortSelect");
+const chart = document.getElementById("chart");
+const tableBody = document.getElementById("tableBody");
+
+function getFilteredDepartments() {
+  const query = searchInput.value.trim().toLowerCase();
+  const sort = sortSelect.value;
+
+  const result = departments.filter(dept =>
+    dept.name.toLowerCase().includes(query)
+  );
+
+  if (sort === "desc") {
+    result.sort((a, b) => b.count - a.count);
+  } else if (sort === "asc") {
+    result.sort((a, b) => a.count - b.count);
+  } else {
+    result.sort((a, b) =>
+      a.name.localeCompare(b.name, "bn")
+    );
+  }
+
+  return result;
+}
+
+function renderDashboard() {
+  const filtered = getFilteredDepartments();
+
+  const total = departments.reduce(
+    (sum, dept) => sum + dept.count, 0
+  );
+
+  const highest = departments.length
+    ? Math.max(...departments.map(dept => dept.count))
+    : 0;
+
+  document.getElementById("totalCount").textContent =
+    bnNumber(total);
+
+  document.getElementById("departmentCount").textContent =
+    bnNumber(departments.length);
+
+  document.getElementById("highestCount").textContent =
+    bnNumber(highest);
+
+  document.getElementById("tableSubtitle").textContent =
+    `মোট ${bnNumber(filtered.length)}টি বিভাগের ফলাফল`;
+
+  chart.replaceChildren();
+  tableBody.replaceChildren();
+
+  if (!filtered.length) {
+    chart.innerHTML =
+      '<div class="empty">কোনো বিভাগ পাওয়া যায়নি।</div>';
+
+    tableBody.innerHTML =
+      '<tr><td colspan="3" class="empty">কোনো তথ্য নেই।</td></tr>';
+
+    return;
+  }
+
+  const maxCount = Math.max(
+    1,
+    ...filtered.map(dept => dept.count)
+  );
+
+  filtered.forEach((dept, index) => {
+    const row = document.createElement("div");
+    row.className = "chart-row";
+
+    const name = document.createElement("div");
+    name.className = "dept-name";
+    name.textContent = dept.name;
+
+    const track = document.createElement("div");
+    track.className = "bar-track";
+
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    bar.style.width =
+      `${(dept.count / maxCount) * 100}%`;
+
+    bar.title = `${dept.name}: ${bnNumber(dept.count)}`;
+
+    track.appendChild(bar);
+
+    const count = document.createElement("div");
+    count.className = "bar-count";
+    count.textContent = bnNumber(dept.count);
+
+    row.append(name, track, count);
+    chart.appendChild(row);
+
+    const tr = document.createElement("tr");
+
+    const serial = document.createElement("td");
+    serial.textContent = bnNumber(index + 1);
+
+    const departmentName = document.createElement("td");
+    departmentName.textContent = dept.name;
+
+    const departmentCount = document.createElement("td");
+
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = bnNumber(dept.count);
+
+    departmentCount.appendChild(badge);
+
+    tr.append(serial, departmentName, departmentCount);
+    tableBody.appendChild(tr);
+  });
+}
+
+searchInput.addEventListener("input", renderDashboard);
+sortSelect.addEventListener("change", renderDashboard);
+
+renderDashboard();
+</script>
+
+</body>
+</html>
