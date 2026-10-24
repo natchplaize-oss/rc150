@@ -8,7 +8,7 @@ on:
       - '.github/workflows/update-stats.yml'
       - 'stats.json'
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 permissions:
