@@ -30,9 +30,9 @@ def fetch_page(url):
 
 def visible_text(html):
     # Drop script/style blocks first so unrelated embedded code cannot be mistaken for page text.
-    html = re.sub(r"<(script|style)\\b[^>]*>.*?</\\1>", " ", html, flags=re.I | re.S)
+    html = re.sub(r"<(script|style)\b[^>]*>.*?</\1>", " ", html, flags=re.I | re.S)
     text = unescape(re.sub(r"<[^>]+>", " ", html))
-    return re.sub(r"\\s+", " ", text)
+    return re.sub(r"\s+", " ", text)
 
 
 def parse_count(raw):
@@ -43,11 +43,11 @@ def parse_count(raw):
 def extract_total(html):
     text = visible_text(html)
     patterns = [
-        r"ইতিমধ্যেই\\s*([\\d,০-৯٬]+)\\s*জন সদস্যের নিবন্ধন সম্পন্ন হয়েছে",
-        r"ইতিমধ্যেই\\s*([\\d,০-৯٬]+)\\s*জন সদস্যের নিবন্ধন সম্পন্ন হয়েছে",
-        r"([\\d,]+)\\s+Verified Participants",
-        r"Showing\\s+[\\d,]+\\s+of\\s+([\\d,]+)",
-        r"([\\d,০-৯٬]+)\\s*(?:জন\\s*)?(?:সদস্য|অংশগ্রহণকারী)\\s*(?:নিবন্ধন সম্পন্ন|নিবন্ধিত)",
+        r"ইতিমধ্যেই\s*([\d,০-৯٬]+)\s*জন সদস্যের নিবন্ধন সম্পন্ন হয়েছে",
+        r"ইতিমধ্যেই\s*([\d,০-৯٬]+)\s*জন সদস্যের নিবন্ধন সম্পন্ন হয়েছে",
+        r"([\d,]+)\s+Verified Participants",
+        r"Showing\s+[\d,]+\s+of\s+([\d,]+)",
+        r"([\d,০-৯٬]+)\s*(?:জন\s*)?(?:সদস্য|অংশগ্রহণকারী)\s*(?:নিবন্ধন সম্পন্ন|নিবন্ধিত)",
     ]
     for pattern in patterns:
         match = re.search(pattern, text, re.I)
@@ -80,7 +80,7 @@ def main():
                     "বিভাগভিত্তিক মোট সংখ্যা নির্ভরযোগ্যভাবে যাচাই করা যায়নি, তাই সেগুলো দেখানো হচ্ছে না।"
                 ),
             })
-            path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+            path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             print(f"Updated public total: {total} from {url}")
             return
         except Exception as exc:
