@@ -383,7 +383,7 @@ td:last-child, th:last-child {
   <div>Rajshahi College 150th Anniversary</div>
   <div>Registration Statistics Dashboard</div>
   <div style="margin-top:5px">
-    প্রদর্শিত তথ্য নমুনা; এটি সরকারি বা যাচাইকৃত প্রতিবেদন নয়।
+    তথ্য মূল RC150 ওয়েবসাইট থেকে পর্যায়ক্রমে যাচাই করা হয়।
   </div>
 </footer>
 
@@ -455,7 +455,7 @@ function renderDashboard() {
 searchInput.addEventListener("input",renderDashboard);
 sortSelect.addEventListener("change",renderDashboard);
 loadStats();
-setInterval(loadStats, 5*60*1000);
+setInterval(loadStats, 30*1000);
 
 </script>
 
