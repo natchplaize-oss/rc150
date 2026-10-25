@@ -37,10 +37,85 @@ jobs:
           fi
           echo "OpenAI API key is configured (value intentionally not displayed)."
 
+      - name: Capture public RC150 page and JavaScript evidence
+        run: |
+          set -euo pipefail
+          mkdir -p .agent-evidence
+          printf '%s\n' '.agent-evidence/' >> .git/info/exclude
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from urllib.parse import urljoin, urlparse
+          from urllib.request import Request, urlopen
+          from pathlib import Path
+
+          BASES = [
+              "https://rc150.org/bn/profiles",
+              "https://rc150.org/en/profiles",
+          ]
+          OUT = Path(".agent-evidence")
+          HEADERS = {"User-Agent": "RC150-Dashboard-Research/1.0 (public-page inspection)"}
+
+          class Scripts(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.sources = []
+              def handle_starttag(self, tag, attrs):
+                  if tag.lower() == "script":
+                      src = dict(attrs).get("src")
+                      if src:
+                          self.sources.append(src)
+
+          def get(url):
+              req = Request(url, headers=HEADERS)
+              with urlopen(req, timeout=20) as response:
+                  return response.geturl(), response.read(2_000_000), response.headers.get("Content-Type", "")
+
+          script_urls = []
+          for i, url in enumerate(BASES):
+              try:
+                  final_url, data, content_type = get(url)
+                  (OUT / f"profile-{i}.html").write_bytes(data)
+                  (OUT / f"profile-{i}-meta.txt").write_text(
+                      f"requested={url}\nfinal={final_url}\ncontent_type={content_type}\nbytes={len(data)}\n",
+                      encoding="utf-8"
+                  )
+                  parser = Scripts()
+                  parser.feed(data.decode("utf-8", "replace"))
+                  script_urls.extend(urljoin(final_url, s) for s in parser.sources)
+              except Exception as exc:
+                  (OUT / f"profile-{i}-error.txt").write_text(f"{url}\n{type(exc).__name__}: {exc}\n", encoding="utf-8")
+
+          # Download only same-site public JavaScript assets; keep this bounded.
+          host = urlparse(BASES[0]).netloc
+          seen = set()
+          count = 0
+          for url in script_urls:
+              if url in seen or urlparse(url).netloc not in {host, "www." + host}:
+                  continue
+              seen.add(url)
+              if count >= 12:
+                  break
+              try:
+                  final_url, data, content_type = get(url)
+                  if "javascript" not in content_type and not urlparse(final_url).path.endswith(".js"):
+                      continue
+                  name = f"script-{count:02d}.js"
+                  (OUT / name).write_bytes(data[:2_000_000])
+                  (OUT / f"{name}.meta.txt").write_text(
+                      f"url={url}\nfinal={final_url}\ncontent_type={content_type}\nbytes_saved={min(len(data), 2_000_000)}\n",
+                      encoding="utf-8"
+                  )
+                  count += 1
+              except Exception as exc:
+                  print(f"Could not fetch a public asset: {url} ({type(exc).__name__})")
+          print(f"Saved public page evidence and {count} same-site JavaScript assets (maximum 12).")
+          PY
+
       - name: Run OpenAI Codex coding agent
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          permission-profile: ":workspace"
           prompt: |
             You are the autonomous coding agent for the RC150 registration dashboard.
             Follow AGENTS.md strictly. User task:
@@ -50,9 +125,11 @@ jobs:
             - Official source: https://rc150.org/bn/profiles
             - Dashboard: https://natchplaize-oss.github.io/rc150/
 
-            Work directly in this checked-out repository. Inspect existing files before editing.
-            For reverse engineering, inspect only publicly served page assets and browser-observable public requests;
-            do not bypass authentication, CAPTCHA, rate limits, or access controls.
+            Inspect the existing repository and the local .agent-evidence files captured from publicly
+            accessible RC150 pages and same-site JavaScript assets. The Codex sandbox has no network access,
+            so do not claim to have observed live browser Network/XHR traffic. Infer only what the captured
+            HTML/assets actually support, record uncertainty, and propose the next permitted verification step.
+            Do not bypass authentication, CAPTCHA, rate limits, or access controls.
             Implement the smallest safe, tested improvement. Do not fabricate registration numbers.
             Run relevant tests and syntax checks. Summarize changed files, tests, evidence, and blockers.
             Do not print or write secrets. Do not change stats.json to guessed values.
