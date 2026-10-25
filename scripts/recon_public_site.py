@@ -38,6 +38,7 @@ class PageParser(HTMLParser):
         self.links = []
         self._form = None
         self._select = None
+        self._active_option_index = None
         self._active_link_index = None
 
     def handle_starttag(self, tag, attrs):
@@ -52,6 +53,7 @@ class PageParser(HTMLParser):
             self.controls.append(self._select)
         if tag == "option" and self._select is not None:
             self._select["options"].append({"value": a.get("value", ""), "label": ""})
+            self._active_option_index = len(self._select["options"]) - 1
         if tag in ("input", "button"):
             self.controls.append({
                 "tag": tag, "type": a.get("type", ""), "name": a.get("name", ""),
@@ -63,16 +65,24 @@ class PageParser(HTMLParser):
             self._active_link_index = len(self.links) - 1
 
     def handle_data(self, data):
-        if self._select is not None and self._select["options"]:
-            self._select["options"][-1]["label"] += data.strip()
+        text = " ".join(data.split())
+        if not text:
+            return
+        if self._select is not None and self._active_option_index is not None:
+            option = self._select["options"][self._active_option_index]
+            option["label"] = f"{option['label']} {text}".strip()
         if self._active_link_index is not None:
-            self.links[self._active_link_index]["label"] += data.strip()
+            link = self.links[self._active_link_index]
+            link["label"] = f"{link['label']} {text}".strip()
 
     def handle_endtag(self, tag):
         if tag == "a":
             self._active_link_index = None
+        elif tag == "option":
+            self._active_option_index = None
         elif tag == "select":
             self._select = None
+            self._active_option_index = None
         elif tag == "form":
             self._form = None
 
