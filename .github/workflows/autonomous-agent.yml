@@ -1,0 +1,84 @@
+name: RC150 Autonomous Coding Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "Task for the coding agent"
+        required: true
+        type: string
+        default: "Reverse-engineer the publicly accessible RC150 profiles page: inspect its HTML, loaded JavaScript, public filter controls, and observable public data requests. Document findings with reproducible evidence. Do not invent department counts."
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: rc150-autonomous-agent
+  cancel-in-progress: false
+
+jobs:
+  coding-agent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify required secret is configured
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::Missing repository secret OPENAI_API_KEY. Add it in Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          echo "OpenAI API key is configured (value intentionally not displayed)."
+
+      - name: Run OpenAI Codex coding agent
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt: |
+            You are the autonomous coding agent for the RC150 registration dashboard.
+            Follow AGENTS.md strictly. User task:
+            ${{ inputs.task }}
+
+            Project links:
+            - Official source: https://rc150.org/bn/profiles
+            - Dashboard: https://natchplaize-oss.github.io/rc150/
+
+            Work directly in this checked-out repository. Inspect existing files before editing.
+            For reverse engineering, inspect only publicly served page assets and browser-observable public requests;
+            do not bypass authentication, CAPTCHA, rate limits, or access controls.
+            Implement the smallest safe, tested improvement. Do not fabricate registration numbers.
+            Run relevant tests and syntax checks. Summarize changed files, tests, evidence, and blockers.
+            Do not print or write secrets. Do not change stats.json to guessed values.
+
+      - name: Run available validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
+          if [ -f scripts/update_stats.py ]; then python -m py_compile scripts/update_stats.py; fi
+          if [ -d tests ]; then python -m unittest discover -s tests -v; else echo "No tests/ directory yet; syntax validation completed where applicable."; fi
+          git diff --check
+
+      - name: Create pull request for agent changes
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ github.token }}
+          branch: codex/rc150-agent-run
+          delete-branch: true
+          title: "RC150 agent: ${{ inputs.task }}"
+          body: |
+            Automated changes proposed by the RC150 coding agent.
+
+            - Agent task: ${{ inputs.task }}
+            - Validation: Python syntax check (when applicable), available unit tests, and git diff whitespace check.
+            - Review the diff and workflow logs before merging.
+          commit-message: "Run RC150 autonomous coding agent"
+          draft: true
+          signoff: false
