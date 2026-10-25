@@ -38,6 +38,7 @@ class PageParser(HTMLParser):
         self.links = []
         self._form = None
         self._select = None
+        self._active_link_index = None
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -59,15 +60,18 @@ class PageParser(HTMLParser):
             })
         if tag == "a" and a.get("href"):
             self.links.append({"href": a["href"], "label": ""})
+            self._active_link_index = len(self.links) - 1
 
     def handle_data(self, data):
         if self._select is not None and self._select["options"]:
             self._select["options"][-1]["label"] += data.strip()
-        if self.links:
-            self.links[-1]["label"] += data.strip()
+        if self._active_link_index is not None:
+            self.links[self._active_link_index]["label"] += data.strip()
 
     def handle_endtag(self, tag):
-        if tag == "select":
+        if tag == "a":
+            self._active_link_index = None
+        elif tag == "select":
             self._select = None
         elif tag == "form":
             self._form = None
