@@ -1,0 +1,43 @@
+name: RC150 Public-Site Recon (No API Key)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/recon_public_site.py'
+      - '.github/workflows/public-recon.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rc150-public-recon
+  cancel-in-progress: true
+
+jobs:
+  inspect-public-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Syntax-check and inspect public RC150 page assets
+        run: |
+          python -m py_compile scripts/recon_public_site.py
+          python scripts/recon_public_site.py
+
+      - name: Upload report and captured public evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rc150-public-recon-${{ github.run_number }}
+          path: recon-report/
+          if-no-files-found: warn
+          retention-days: 14
